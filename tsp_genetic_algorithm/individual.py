@@ -8,7 +8,9 @@ from .parameters import Parameters
 
 
 class Individual(object):
-    fitness: int = -1
+    fitness: int = -1      # F = f1 + f2
+    distance: int = -1     # f1: total distance
+    cost: int = -1         # f2: total cost
     genome: List[Gene]
 
     def __init__(self, genome: List[Gene], mutate: bool = False) -> None:
@@ -31,53 +33,78 @@ class Individual(object):
     @classmethod
     def construct_from_parents(cls, father: Individual, mother: Individual) -> Individual:
         """
-        Create a new individual by crossing over two parents' genomes.
-        Uses order crossover (OX) to maintain valid permutations.
+        Create a new individual using two-point crossover.
+        When a city appears more than once, it is replaced by a missing city.
         """
         size = len(father.genome)
 
-        # Select a random crossover segment
-        start = random.randint(0, size - 1)
-        end = random.randint(start + 1, size)
+        # Select two random crossover points
+        point1 = random.randint(1, size - 2)
+        point2 = random.randint(point1 + 1, size - 1)
 
-        # Start with empty genome
-        child_genome = [None] * size
+        # Start with father's genome
+        child_genome = [Gene(gene) for gene in father.genome]
 
-        # Copy the segment from father
-        for i in range(start, end):
-            child_genome[i] = Gene(father.genome[i])
+        # Copy segment from mother between point1 and point2
+        for i in range(point1, point2):
+            child_genome[i] = Gene(mother.genome[i])
 
-        # Fill remaining positions with mother's genes in order
-        mother_genes = [Gene(gene) for gene in mother.genome]
-        child_set = {str(g) for g in child_genome if g is not None}
+        # Find duplicates and missing cities
+        cities_in_child = [str(g) for g in child_genome]
+        all_cities = set(TSP.cities)
 
-        # Get genes from mother that aren't already in child
-        remaining = [g for g in mother_genes if str(g) not in child_set]
+        # Find which cities appear more than once and which are missing
+        seen = set()
+        duplicates = []
+        for i, city in enumerate(cities_in_child):
+            if city in seen:
+                duplicates.append(i)
+            else:
+                seen.add(city)
 
-        # Fill in the blanks
-        j = 0
-        for i in range(size):
-            if child_genome[i] is None:
-                child_genome[i] = remaining[j]
-                j += 1
+        missing = list(all_cities - seen)
+        random.shuffle(missing)
+
+        # Replace duplicates with missing cities
+        for i, dup_idx in enumerate(duplicates):
+            child_genome[dup_idx] = Gene(missing[i])
 
         return cls(genome=child_genome, mutate=True)
 
     def mutate(self) -> None:
-        """Apply mutation by swapping two random genes."""
+        """Apply mutation by swapping two random genes (swap mutation)."""
         if random.random() < Parameters.mutations_rate:
             if len(self.genome) >= 2:
                 i, j = random.sample(range(len(self.genome)), 2)
                 self.genome[i], self.genome[j] = self.genome[j], self.genome[i]
 
     def evaluate(self) -> None:
-        """Calculate the fitness (total distance) of this individual."""
-        self.fitness = 0
+        """
+        Calculate the bi-objective fitness.
+        f1 = total distance
+        f2 = total cost
+        F = f1 + f2
+        """
+        self.distance = 0  # f1
+        self.cost = 0      # f2
+
         for i in range(len(self.genome) - 1):
-            self.fitness += self.genome[i].distance(self.genome[i + 1])
-        # Add distance to return to the starting city
-        self.fitness += self.genome[-1].distance(self.genome[0])
+            self.distance += self.genome[i].distance(self.genome[i + 1])
+            self.cost += self.genome[i].cost(self.genome[i + 1])
+
+        # Add return to starting city
+        self.distance += self.genome[-1].distance(self.genome[0])
+        self.cost += self.genome[-1].cost(self.genome[0])
+
+        # Combined fitness F = f1 + f2
+        self.fitness = self.distance + self.cost
+
+    def get_tour_string(self) -> str:
+        """Get the tour as a comma-separated string (for XML output)."""
+        cities = [str(gene) for gene in self.genome]
+        cities.append(cities[0])  # Return to start
+        return ",".join(cities)
 
     def __str__(self) -> str:
         route = " -> ".join(str(gene) for gene in self.genome)
-        return f"Distance: {self.fitness} km | Route: {route}"
+        return f"F={self.fitness} (Distance={self.distance}, Cost={self.cost}) | {route}"

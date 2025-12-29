@@ -19,3 +19,6 @@ class Gene(object):
 
     def distance(self, gene: "Gene") -> int:
         return TSP.distance(self.city, gene.city)
+
+    def cost(self, gene: "Gene") -> int:
+        return TSP.cost(self.city, gene.city)

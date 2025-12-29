@@ -39,7 +39,7 @@ class EvolutionaryProcess(object):
             if self.best_individual is None or current_best.fitness < self.best_individual.fitness:
                 self.best_individual = current_best
                 self.best_generation = self.generation
-                print(f"Generation {self.generation:4d}: New best found - {current_best.fitness} km")
+                print(f"Generation {self.generation:4d}: New best F={current_best.fitness} (dist={current_best.distance}, cost={current_best.cost})")
 
             # Check if we reached the target fitness
             if Parameters.min_fitness > 0 and current_best.fitness <= Parameters.min_fitness:

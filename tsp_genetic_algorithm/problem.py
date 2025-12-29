@@ -3,8 +3,9 @@ from typing import List
 
 class TSP:
     """
-    Traveling Salesman Problem configuration for 15 cities.
-    Data loaded from the provided CSV files.
+    Bi-objective Traveling Salesman Problem for 15 cities.
+    Minimizes both distance (f1) and cost (f2).
+    Fitness F = f1 + f2
     """
 
     # List of 15 cities
@@ -13,8 +14,7 @@ class TSP:
         "C9", "C10", "C11", "C12", "C13", "C14", "C15",
     ]
 
-    # Distance matrix (15x15) - symmetric matrix
-    # distances[i][j] = distance from city i to city j
+    # Distance matrix (15x15) from distances.csv
     distances: List[List[int]] = [
         [0, 12, 18, 25, 30, 22, 28, 35, 40, 26, 34, 45, 38, 42, 50],   # C1
         [12, 0, 14, 20, 24, 18, 22, 30, 34, 20, 28, 38, 32, 36, 44],   # C2
@@ -33,7 +33,31 @@ class TSP:
         [50, 44, 42, 38, 34, 32, 30, 26, 24, 22, 18, 16, 12, 10, 0],   # C15
     ]
 
+    # Cost matrix (15x15) from cities.csv
+    costs: List[List[int]] = [
+        [0, 20, 24, 35, 40, 30, 36, 50, 55, 32, 45, 60, 48, 52, 65],   # C1
+        [20, 0, 18, 28, 32, 26, 30, 44, 48, 26, 38, 52, 42, 46, 58],   # C2
+        [24, 18, 0, 22, 30, 24, 28, 40, 44, 24, 36, 48, 40, 44, 56],   # C3
+        [35, 28, 22, 0, 20, 26, 24, 34, 38, 30, 34, 44, 38, 40, 52],   # C4
+        [40, 32, 30, 20, 0, 18, 26, 30, 34, 32, 36, 40, 38, 36, 48],   # C5
+        [30, 26, 24, 26, 18, 0, 16, 26, 30, 22, 26, 36, 32, 34, 44],   # C6
+        [36, 30, 28, 24, 26, 16, 0, 20, 26, 20, 22, 32, 30, 32, 40],   # C7
+        [50, 44, 40, 34, 30, 26, 20, 0, 22, 24, 26, 30, 28, 30, 36],   # C8
+        [55, 48, 44, 38, 34, 30, 26, 22, 0, 20, 22, 28, 26, 28, 34],   # C9
+        [32, 26, 24, 30, 32, 22, 20, 24, 20, 0, 18, 26, 24, 26, 32],   # C10
+        [45, 38, 36, 34, 36, 26, 22, 26, 22, 18, 0, 22, 20, 22, 28],   # C11
+        [60, 52, 48, 44, 40, 36, 32, 30, 28, 26, 22, 0, 18, 20, 26],   # C12
+        [48, 42, 40, 38, 38, 32, 30, 28, 26, 24, 20, 18, 0, 14, 18],   # C13
+        [52, 46, 44, 40, 36, 34, 32, 30, 28, 26, 22, 20, 14, 0, 16],   # C14
+        [65, 58, 56, 52, 48, 44, 40, 36, 34, 32, 28, 26, 18, 16, 0],   # C15
+    ]
+
     @classmethod
     def distance(cls, city1: str, city2: str) -> int:
         """Get the distance between two cities."""
         return cls.distances[cls.cities.index(city1)][cls.cities.index(city2)]
+
+    @classmethod
+    def cost(cls, city1: str, city2: str) -> int:
+        """Get the cost between two cities."""
+        return cls.costs[cls.cities.index(city1)][cls.cities.index(city2)]
