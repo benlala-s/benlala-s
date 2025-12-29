@@ -2,10 +2,10 @@
 <TSP_Solutions>
 
     <Solution id="best">
-        <Tour>C3,C1,C2,C10,C9,C11,C12,C14,C15,C13,C8,C7,C6,C5,C4,C3</Tour>
-        <Distance>208</Distance>
-        <Cost>312</Cost>
-        <Fitness>520</Fitness>
+        <Tour>C15,C13,C11,C10,C7,C6,C1,C2,C3,C4,C5,C8,C9,C12,C14,C15</Tour>
+        <Distance>212</Distance>
+        <Cost>318</Cost>
+        <Fitness>530</Fitness>
     </Solution>
 
 </TSP_Solutions>

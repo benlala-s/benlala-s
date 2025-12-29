@@ -107,4 +107,5 @@ class Individual(object):
 
     def __str__(self) -> str:
         route = " -> ".join(str(gene) for gene in self.genome)
-        return f"F={self.fitness} (Distance={self.distance}, Cost={self.cost}) | {route}"
+        start = str(self.genome[0])
+        return f"F={self.fitness} (Distance={self.distance}, Cost={self.cost}) | {route} -> {start}"
