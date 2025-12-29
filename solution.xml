@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <TSP_Solutions>
+    <BestFitness>512</BestFitness>
+    <TotalSolutions>2</TotalSolutions>
 
-    <Solution id="best">
+    <Solution id="1">
         <Tour>C6,C5,C4,C3,C1,C2,C10,C11,C14,C15,C13,C12,C9,C8,C7,C6</Tour>
         <Distance>204</Distance>
         <Cost>308</Cost>
-        <Fitness>512</Fitness>
+    </Solution>
+
+    <Solution id="2">
+        <Tour>C15,C13,C9,C8,C7,C6,C5,C4,C3,C1,C2,C10,C11,C12,C14,C15</Tour>
+        <Distance>204</Distance>
+        <Cost>308</Cost>
     </Solution>
 
 </TSP_Solutions>
