@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TSP_Solutions>
+
+    <Solution id="1">
+        <Tour>C1,C2,C3,C4,C5,C6,C7,C8,C9,C10,C11,C12,C13,C14,C15,C1</Tour>
+        <Distance>218</Distance>
+        <Cost>329</Cost>
+    </Solution>
+
+    <Solution id="2">
+        <Tour>C1,C4,C7,C10,C13,C15,C14,C12,C11,C9,C8,C6,C5,C3,C2,C1</Tour>
+        <Distance>242</Distance>
+        <Cost>301</Cost>
+    </Solution>
+
+</TSP_Solutions>
+
+
